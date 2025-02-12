@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gruths PNG Financial Calculator</h1>
+
+        <!-- Tax Calculator Section -->
+        <h2>Tax Calculator</h2>
+        <label>Gross Salary (Fortnightly):</label>
+        <input type="number" id="grossSalary" placeholder="Enter your gross salary">
+
+        <!-- Overtime -->
+        <div class="collapsible" onclick="toggleCollapsible('overtime')">➕ Overtime Details</div>
+        <div class="collapsible-content" id="overtime">
+            <label>Standard Rate (Per Hour):</label>
+            <input type="number" id="standardRate" placeholder="Enter your standard rate">
+            <label>Overtime (1.0x) Hours:</label>
+            <input type="number" id="ot10Hours" placeholder="Hours worked at 1.0x rate">
+            <label>Overtime (1.5x) Hours:</label>
+            <input type="number" id="ot15Hours" placeholder="Hours worked at 1.5x rate">
+            <label>Overtime (2.0x) Hours:</label>
+            <input type="number" id="ot20Hours" placeholder="Hours worked at 2.0x rate">
+        </div>
+
+        <!-- Fringe Benefit Tax -->
+        <div class="collapsible" onclick="toggleCollapsible('fbt')">➕ Fringe Benefit Tax (FBT)</div>
+        <div class="collapsible-content" id="fbt">
+            <input type="number" id="fbtVehicle" placeholder="Vehicle FBT">
+            <input type="number" id="fbtHouse" placeholder="House FBT">
+            <input type="number" id="fbtRent" placeholder="Rent FBT">
+        </div>
+
+        <!-- Tax-Deductibles -->
+        <div class="collapsible" onclick="toggleCollapsible('deductibles')">➕ Tax-Deductibles</div>
+        <div class="collapsible-content" id="deductibles">
+            <input type="number" id="deductVehicle" placeholder="Vehicle Deduction">
+            <input type="number" id="deductHouse" placeholder="House Deduction">
+            <input type="number" id="deductRent" placeholder="Rent Deduction">
+            <input type="number" id="deductSchool" placeholder="School Fees">
+            <input type="number" id="deductOther1" placeholder="Other Deduction">
+            <input type="number" id="deductOther2" placeholder="Other Deduction">
+        </div>
+
+        <!-- Dependents -->
+        <label>Number of Dependents:</label>
+        <input type="number" id="dependents" placeholder="Enter number of dependents">
+
+        <!-- Calculate Tax Button -->
+        <button onclick="calculateTax()">Calculate Tax</button>
+
+        <!-- Tax Results -->
+        <div class="result" id="taxResult">
+            <strong>Tax Results:</strong><br>
+            <b>Taxable Gross:</b> 0.00 PGK<br>
+            <b>Fortnightly Tax:</b> 0.00 PGK
+        </div>
+
+        <!-- Salary Calculator Section -->
+        <h2>Salary Calculator</h2>
+        <label>Net Salary:</label>
+        <input type="number" id="netSalary" placeholder="Net Salary" readonly>
+
+        <!-- Deductions -->
+        <h3>Deductions</h3>
+        <!-- Nusfund/Nambawan Super -->
+        <div class="collapsible" onclick="toggleCollapsible('nusfund')">➕ Nusfund/Nambawan Super</div>
+        <div class="collapsible-content" id="nusfund">
+            <label>Nusfund/Nambawan Super 1:</label>
+            <input type="number" id="nusfund1" placeholder="Enter amount">
+            <label>Nusfund/Nambawan Super 2:</label>
+            <input type="number" id="nusfund2" placeholder="Enter amount">
+            <label>Nusfund/Nambawan Super 3:</label>
+            <input type="number" id="nusfund3" placeholder="Enter amount">
+        </div>
+
+        <!-- Deductions 1-7 -->
+        <div class="collapsible" onclick="toggleCollapsible('deductions')">➕ Deductions 1-7</div>
+        <div class="collapsible-content" id="deductions">
+            <label>Deduction 1:</label>
+            <input type="number" id="deduction1" placeholder="Enter amount">
+            <label>Deduction 2:</label>
+            <input type="number" id="deduction2" placeholder="Enter amount">
+            <label>Deduction 3:</label>
+            <input type="number" id="deduction3" placeholder="Enter amount">
+            <label>Deduction 4:</label>
+            <input type="number" id="deduction4" placeholder="Enter amount">
+            <label>Deduction 5:</label>
+            <input type="number" id="deduction5" placeholder="Enter amount">
+            <label>Deduction 6:</label>
+            <input type="number" id="deduction6" placeholder="Enter amount">
+            <label>Deduction 7:</label>
+            <input type="number" id="deduction7" placeholder="Enter amount">
+        </div>
+
+        <!-- Other Bank Savings -->
+        <div class="collapsible" onclick="toggleCollapsible('savings')">➕ Other Bank Savings</div>
+        <div class="collapsible-content" id="savings">
+            <label>Other Bank Savings 1:</label>
+            <input type="number" id="savings1" placeholder="Enter amount">
+            <label>Other Bank Savings 2:</label>
+            <input type="number" id="savings2" placeholder="Enter amount">
+            <label>Other Bank Savings 3:</label>
+            <input type="number" id="savings3" placeholder="Enter amount">
+        </div>
+
+        <!-- Total Deductions -->
+        <label>Total Deductions:</label>
+        <input type="number" id="totalDeductions" placeholder="Total Deductions" readonly>
+
+        <!-- Adjusted Net Pay -->
+        <label>Adjusted Net Pay:</label>
+        <input type="number" id="adjustedNetPay" placeholder="Adjusted Net Pay" readonly>
+
+        <!-- Calculate Salary Button -->
+        <button onclick="calculateSalary()">Calculate Salary</button>
+
+        <!-- Salary Results -->
+        <div class="result" id="salaryResult">
+            <strong>Salary Results:</strong><br>
+            <b>Total Deductions:</b> 0.00 PGK<br>
+            <b>Adjusted Net Pay:</b> 0.00 PGK
+        </div>
+
+        <!-- Budget Calculator Section -->
+        <h2>Budget Calculator</h2>
+        <label>Total Net Income (from Salary Calculator):</label>
+        <input type="number" id="totalNetIncome" placeholder="Enter total net income" readonly>
+        <label>Other Income (e.g. Side Hustles):</label>
+        <input type="number" id="otherIncome" placeholder="Enter other income">
+
+        <!-- Expenses -->
+        <label>Rent:</label>
+        <input type="number" id="rent" placeholder="Enter rent">
+        <label>Utilities (Electricity, Water, Internet, etc.):</label>
+        <input type="number" id="utilities" placeholder="Enter utilities">
+        <label>Groceries:</label>
+        <input type="number" id="groceries" placeholder="Enter groceries">
+        <label>Transport:</label>
+        <input type="number" id="transport" placeholder="Enter transport">
+        <label>Entertainment:</label>
+        <input type="number" id="entertainment" placeholder="Enter entertainment">
+        <label>Healthcare:</label>
+        <input type="number" id="healthcare" placeholder="Enter healthcare">
+        <label>Debt Repayments:</label>
+        <input type="number" id="debtRepayments" placeholder="Enter debt repayments">
+        <label>Other Expenses:</label>
+        <input type="number" id="otherExpenses" placeholder="Enter other expenses">
+
+        <!-- Savings Goals -->
+        <label>Savings for Emergency Fund:</label>
+        <input type="number" id="emergencySavings" placeholder="Enter emergency savings goal">
+        <label>Savings for Retirement:</label>
+        <input type="number" id="retirementSavings" placeholder="Enter retirement savings goal">
+        <label>Savings for Other Goals:</label>
+        <input type="number" id="otherSavings" placeholder="Enter other savings goal">
+
+        <!-- Calculate Budget Button -->
+        <button onclick="calculateBudget()">Calculate Budget</button>
+
+        <!-- Budget Results -->
+        <div class="result" id="budgetResult">
+            <strong>Budget Results:</strong><br>
+            <b>Total Income:</b> 0.00 PGK<br>
+            <b>Total Expenses:</b> 0.00 PGK<br>
+            <b>Total Savings Goal:</b> 0.00 PGK<br>
+            <b>Remaining Balance:</b> 0.00 PGK
+        </div>
+    </div>
+
+    <script>
+        // Input Validation
+        function validateInput(input) {
+            if (input.value < 0 || isNaN(input.value)) {
+                document.getElementById("errorMessage").innerText = "Please enter valid positive numbers.";
+            } else {
+                document.getElementById("errorMessage").innerText = "";
+            }
+        }
+
+        // Toggle collapsible sections
+        function toggleCollapsible(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle("active");
+        }
+
+        // Calculate Tax
+        function calculateTax() {
+            // Get inputs
+            let grossSalary = parseFloat(document.getElementById("grossSalary").value) || 0;
+            let standardRate = parseFloat(document.getElementById("standardRate").value) || 0;
+            let ot10Hours = parseFloat(document.getElementById("ot10Hours").value) || 0;
+            let ot15Hours = parseFloat(document.getElementById("ot15Hours").value) || 0;
+            let ot20Hours = parseFloat(document.getElementById("ot20Hours").value) || 0;
+
+            let fbtVehicle = parseFloat(document.getElementById("fbtVehicle").value) || 0;
+            let fbtHouse = parseFloat(document.getElementById("fbtHouse").value) || 0;
+            let fbtRent = parseFloat(document.getElementById("fbtRent").value) || 0;
+
+            let deductVehicle = parseFloat(document.getElementById("deductVehicle").value) || 0;
+            let deductHouse = parseFloat(document.getElementById("deductHouse").value) || 0;
+            let deductRent = parseFloat(document.getElementById("deductRent").value) || 0;
+            let deductSchool = parseFloat(document.getElementById("deductSchool").value) || 0;
+            let deductOther1 = parseFloat(document.getElementById("deductOther1").value) || 0;
+            let deductOther2 = parseFloat(document.getElementById("deductOther2").value) || 0;
+
+            let dependents = parseInt(document.getElementById("dependents").value) || 0;
+
+            // Calculate Total Gross (1G)
+            let ot10Pay = ot10Hours * standardRate;
+            let ot15Pay = ot15Hours * (standardRate * 1.5);
+            let ot20Pay = ot20Hours * (standardRate * 2.0);
+            let totalGross = grossSalary + ot10Pay + ot15Pay + ot20Pay;
+
+            // Calculate New Gross (2G)
+            let totalDeductions = deductVehicle + deductHouse + deductRent + deductSchool + deductOther1 + deductOther2;
+            let newGross = totalGross - totalDeductions;
+
+            // Calculate Taxable Gross (3G)
+            let totalFBT = fbtVehicle + fbtHouse + fbtRent;
+            let taxableGross = newGross + totalFBT;
+
+            // Taxable annual income
+            let X = (taxableGross * 26) - 200;
+            let tax = 0;
+
+            // Apply tax brackets
+            if (X > 250000) {
+                tax = (X * 0.42) - 16150;
+            } else if (X > 70000) {
+                tax = (X * 0.4) - 11150;
+            } else if (X > 33000) {
+                tax = (X * 0.35) - 7650;
+            } else if (X > 20000) {
+                tax = (X * 0.3) - 6000;
+            } else {
+                tax = 0;
+            }
+
+            // Apply dependent deductions
+            let dependentDeduction = (dependents >= 3) ? 1050 : (dependents == 2) ? 750 : (dependents == 1) ? 450 : 0;
+            tax -= dependentDeduction;
+
+            // Fortnightly tax
+            let fortnightlyTax = tax / 26;
+
+            // Display tax results
+            document.getElementById("taxResult").innerHTML = `
+                <strong>Tax Results:</strong><br>
+                <b>Taxable Gross:</b> ${taxableGross.toFixed(2)} PGK<br>
+                <b>Fortnightly Tax:</b> ${fortnightlyTax.toFixed(2)} PGK
+            `;
+
+            // Calculate Net Salary (2G - Fortnightly Tax)
+            let netSalary = newGross - fortnightlyTax;
+            document.getElementById("netSalary").value = netSalary.toFixed(2);
+        }
+
+        // Calculate Salary
+        function calculateSalary() {
+            let netSalary = parseFloat(document.getElementById("netSalary").value) || 0;
+
+            // Get deduction values
+            let nusfund1 = parseFloat(document.getElementById("nusfund1").value) || 0;
+            let nusfund2 = parseFloat(document.getElementById("nusfund2").value) || 0;
+            let nusfund3 = parseFloat(document.getElementById("nusfund3").value) || 0;
+
+            let deduction1 = parseFloat(document.getElementById("deduction1").value) || 0;
+            let deduction2 = parseFloat(document.getElementById("deduction2").value) || 0;
+            let deduction3 = parseFloat(document.getElementById("deduction3").value) || 0;
+            let deduction4 = parseFloat(document.getElementById("deduction4").value) || 0;
+            let deduction5 = parseFloat(document.getElementById("deduction5").value) || 0;
+            let deduction6 = parseFloat(document.getElementById("deduction6").value) || 0;
+            let deduction7 = parseFloat(document.getElementById("deduction7").value) || 0;
+
+            let savings1 = parseFloat(document.getElementById("savings1").value) || 0;
+            let savings2 = parseFloat(document.getElementById("savings2").value) || 0;
+            let savings3 = parseFloat(document.getElementById("savings3").value) || 0;
+
+            // Calculate total deductions
+            let totalDeductions = nusfund1 + nusfund2 + nusfund3 + deduction1 + deduction2 + deduction3 + deduction4 + deduction5 + deduction6 + deduction7 + savings1 + savings2 + savings3;
+
+            // Adjusted Net Pay = Net Salary - Total Deductions
+            let adjustedNetPay = netSalary - totalDeductions;
+
+            // Display results
+            document.getElementById("totalDeductions").value = totalDeductions.toFixed(2);
+            document.getElementById("adjustedNetPay").value = adjustedNetPay.toFixed(2);
+
+            document.getElementById("salaryResult").innerHTML = `
+                <strong>Salary Results:</strong><br>
+                <b>Total Deductions:</b> ${totalDeductions.toFixed(2)} PGK<br>
+                <b>Adjusted Net Pay:</b> ${adjustedNetPay.toFixed(2)} PGK
+            `;
+
+            // Pass values to Budget Calculator
+            document.getElementById("totalNetIncome").value = adjustedNetPay.toFixed(2);
+        }
+
+        // Calculate Budget
+        function calculateBudget() {
+            let totalNetIncome = parseFloat(document.getElementById("totalNetIncome").value) || 0;
+            let otherIncome = parseFloat(document.getElementById("otherIncome").value) || 0;
+
+            let expenses = [
+                parseFloat(document.getElementById("rent").value) || 0,
+                parseFloat(document.getElementById("utilities").value) || 0,
+                parseFloat(document.getElementById("groceries").value) || 0,
+                parseFloat(document.getElementById("transport").value) || 0,
+                parseFloat(document.getElementById("entertainment").value) || 0,
+                parseFloat(document.getElementById("healthcare").value) || 0,
+                parseFloat(document.getElementById("debtRepayments").value) || 0,
+                parseFloat(document.getElementById("otherExpenses").value) || 0
+            ];
+
+            let savings = [
+                parseFloat(document.getElementById("emergencySavings").value) || 0,
+                parseFloat(document.getElementById("retirementSavings").value) || 0,
+                parseFloat(document.getElementById("otherSavings").value) || 0
+            ];
+
+            let totalExpenses = expenses.reduce((sum, value) => sum + value, 0);
+            let totalSavingsGoal = savings.reduce((sum, value) => sum + value, 0);
+
+            let totalIncome = totalNetIncome + otherIncome;
+            let remainingBalance = totalIncome - totalExpenses - totalSavingsGoal;
+
+            document.getElementById("budgetResult").innerHTML = `
+                <strong>Budget Results:</strong><br>
+                <b>Total Income:</b> ${totalIncome.toFixed(2)} PGK<br>
+                <b>Total Expenses:</b> ${totalExpenses.toFixed(2)} PGK<br>
+                <b>Total Savings Goal:</b> ${totalSavingsGoal.toFixed(2)} PGK<br>
+                <b>Remaining Balance:</b> ${remainingBalance.toFixed(2)} PGK
+            `;
+        }
+    </script>
+</body>
+</html>
